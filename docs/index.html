@@ -265,6 +265,7 @@
       <div class="stat"><div class="v" id="repeat-allmulti">—</div><div class="l">All stays multi-night</div></div>
     </div>
     <p class="chart-cap" id="repeat-loading">Loading repeat breakdown…</p>
+    <p class="chart-cap" id="repeat-only1night" style="display:none;"></p>
     <p class="chart-cap" id="repeat-err" style="display:none;"></p>
     <div id="repeat-buckets"></div>
 
@@ -346,6 +347,16 @@
             document.getElementById("repeat-multi").textContent = String(data.repeatWithAnyMultiNightStay);
             document.getElementById("repeat-allmulti").textContent = String(data.repeatWhereAllStaysMultiNight);
 
+            var only1 = data.repeatGuestCount - data.repeatWithAnyMultiNightStay;
+            var n1 = document.getElementById("repeat-only1night");
+            if (only1 > 0) {
+              n1.style.display = "block";
+              n1.textContent =
+                only1 +
+                " repeat guest" +
+                (only1 === 1 ? "" : "s") +
+                " had only 1-night stays on every visit — they do not appear in any bucket below.";
+            }
             var wrap = document.getElementById("repeat-buckets");
             wrap.innerHTML = "";
             (data.buckets || []).forEach(function (b) {
