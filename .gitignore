@@ -1,0 +1,7 @@
+# Do not commit guest PII or exports to a public GitHub repo
+beds24*.xlsx
+beds24*.csv
+~$*.xlsx
+.env
+.env.*
+.DS_Store

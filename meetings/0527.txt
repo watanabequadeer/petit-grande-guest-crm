@@ -1,0 +1,53 @@
+# Petit Grande Marketing Strategy & Customer Management Meeting
+
+## Marketing Strategy
+
+- Continue Google Ads but position as broader approach, focusing on community building through social media (Instagram, Facebook, Line, WhatsApp, Discord)
+- Leverage community platforms like Facebook Groups and Line Groups to reduce customer acquisition costs and facilitate repeat customers
+- Implement content marketing strategy using Instagram Reels showing POV (point of view) experiences such as pickup service at Jumbay
+- Consider TikTok as platform with easy algorithm penetration
+- Facebook Marketplace effective for 40+ demographic
+
+## Target Market & Service Proposals
+
+- Primary targets: Thai and Filipino large families/groups (12-15 people)
+- Comprehensive tour packages: accommodation + pickup/drop-off + Mt. Fuji tours + Disneyland, etc.
+- Japan travel challenge: DIY approach is burdensome for large families and families with children
+- Differentiation strategy: implement butler-style full support system like other countries (Philippines, Thailand)
+- Regional collaboration possibilities: multi-destination tours leveraging Tokyo, Miyazaki, Niigata locations
+- Strategy for seasonal destinations like Beppu: acquire repeat customers by leveraging Tokyo base
+
+## CRM & Customer Database Development
+
+- Exploring CRM development using ClickUp
+- Existing customer database exists but not being utilized
+- Importance of email collection: begin collecting email addresses from all guests at check-in
+- Newsletter distribution, seasonal offers, repeat customer campaigns
+- Need for email marketing metrics tracking (open rates, etc.)
+
+## Customer Experience Improvement
+
+- Conduct surveys and collect feedback from existing customers to identify improvement areas
+- Repeat customer identification system: reference restaurant industry tablecloth color-coding example to differentiate service for 1st, 2nd, 3rd-time customers (20-30% repeat rate for 1st-timers, 45-50% for 2nd, 70% for 3rd)
+- Focus on improving existing customer experience, not just acquiring new customers
+
+## Operations & Personnel
+
+- Plan to recruit 1-2 drivers from Philippines (with Mark, Ali, JP available, 5-person team possible)
+- Provide as hotel guest transportation service to meet license requirements
+- 100% success rate for staff recruitment from Philippines
+
+## Reference Cases
+
+- teamLab example: Beppu Betting Center project (2 billion yen scale) adopted by government due to superior UX design
+- Importance of custom experience: more efficient to leverage existing excellent experiences than build from scratch
+
+## Action Items
+
+- [ ]  Build CRM using ClickUp and organize existing customer database
+- [ ]  Strengthen content marketing (Reels/POV videos) on Instagram and Facebook
+- [ ]  Begin planning tour packages (accommodation + transportation + sightseeing)
+- [ ]  Begin collecting email addresses from all guests at check-in
+- [ ]  Proceed with recruiting 1-2 drivers from Philippines
+- [ ]  Conduct surveys and collect feedback from existing customers
+- [ ]  Confirm customer information details with hotel team

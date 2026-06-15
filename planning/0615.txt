@@ -1,0 +1,16 @@
+What the meeting is really telling you
+The notes cover a lot of ground (marketing channels, tour packaging, hiring drivers, CX tiers), but for this project — the folder is literally named GUEST CRM — the signal is clear. Three threads are tightly connected and form the actual buildable core:
+
+The data foundation is broken. "Existing customer database exists but not being utilized" (line 23) and "begin collecting email addresses from all guests at check-in" (line 24). You can't do any of the marketing ambitions (newsletters, seasonal offers, repeat campaigns) until guest contact data is being captured reliably and centralized.
+Repeat business is the real growth lever. The repeat-rate stat is the most important number in the whole doc: 20-30% → 45-50% → 70% across 1st/2nd/3rd visits (line 31). That means the highest ROI isn't new acquisition — it's a system that identifies returning guests and re-markets to them. CRM + email is exactly that engine.
+Everything else is downstream. Tour packages, butler service, Reels content, Philippine drivers — these are real, but they're business/ops initiatives, not "GUEST CRM" deliverables. They become campaigns and segments inside the CRM once the foundation exists.
+My recommended direction
+Scope this project as a guest data + lifecycle marketing system, sequenced so value compounds:
+
+Phase 1 — Capture & centralize. Standardize email/contact collection at check-in; migrate and clean the existing database into one source of truth.
+Phase 2 — Segment by visit count. Implement the 1st/2nd/3rd-time guest tiering (the "tablecloth color-coding" idea) so repeat guests are visible and actionable.
+Phase 3 — Lifecycle email. Welcome, post-stay feedback survey, seasonal offers, win-back — with open/click tracking (line 26).
+Phase 4 — Feed the rest. Use the segments to power tour-package offers and the community/Reels funnel.
+One flag: the notes say "Exploring CRM development using ClickUp" (line 22). ClickUp is fine as an internal ops board, but it is not a guest CRM or an email platform — pushing guest lifecycle marketing through it will fight you. That's a decision worth making deliberately rather than by default.
+
+Before I turn this into a concrete plan, two things will change the shape of it significantly:

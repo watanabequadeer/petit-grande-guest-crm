@@ -1,0 +1,4 @@
+full_name,email,phone,nationality_language,party_size,first_stay_date,last_stay_date,total_stays,visit_tier,source_channel,email_consent,marketing_status,tags_interests,notes
+Somchai Jaidee,somchai.jaidee@example.com,+66812345678,Thai,12,2025-03-14,2026-01-09,2,2nd-time,Instagram,TRUE,Subscribed,Mt. Fuji;Family,Large family group; requested airport pickup
+Maria Santos,maria.santos@example.com,+639171234567,Filipino,15,2024-11-02,2026-02-20,3,3rd+,Referral,TRUE,Subscribed,Disneyland;Tour;Family,VIP repeat; interested in butler-style support
+Anan Phakdee,anan.phakdee@example.com,+66890001122,Thai,8,2026-05-18,2026-05-18,1,1st-time,Google Ads,FALSE,Unsubscribed,Beppu,No marketing consent given at check-in

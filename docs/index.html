@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Petit Grande — Guest data report</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --surface: #161a22;
+      --text: #e8eaed;
+      --muted: #9aa0a6;
+      --border: #2a3140;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --success: #4ade80;
+      --info: #60a5fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    #gate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .gate-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+    }
+    .gate-card h1 { font-size: 1.1rem; margin: 0 0 8px; font-weight: 600; }
+    .gate-card p { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+    }
+    button {
+      margin-top: 14px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: none;
+      background: #3b82f6;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.08); }
+    .err { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 1.2em; }
+    #report { display: none; max-width: 960px; margin: 0 auto; padding: 28px 20px 48px; }
+    #report.visible { display: block; }
+    #report h1 { font-size: 1.5rem; margin: 0 0 6px; font-weight: 700; }
+    #report .sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+    #report h2 { font-size: 1.15rem; margin: 28px 0 10px; font-weight: 600; border-top: 1px solid var(--border); padding-top: 22px; }
+    #report h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+    #report h3 { font-size: 0.95rem; margin: 16px 0 8px; color: var(--muted); font-weight: 600; }
+    .callout {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--danger);
+      background: var(--surface);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .callout.warn { border-left-color: var(--warning); }
+    .callout.info { border-left-color: var(--info); }
+    .callout.neutral { border-left-color: var(--muted); }
+    .callout strong { display: block; margin-bottom: 6px; font-size: 14px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0; }
+    @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    .stat .v { font-size: 1.35rem; font-weight: 700; }
+    .stat .v.d { color: var(--danger); }
+    .stat .l { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+    th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+    th { background: var(--surface); color: var(--muted); font-weight: 600; font-size: 12px; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin: 14px 0; }
+    @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+    .chart-cap { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    svg { max-width: 100%; height: auto; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 13px; }
+    .bar-row span:first-child { width: 110px; flex-shrink: 0; color: var(--muted); }
+    .bar-track { flex: 1; height: 22px; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+    .bar-fill { height: 100%; border-radius: 3px; }
+    .pill { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); color: var(--muted); vertical-align: middle; margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <div id="gate">
+    <div class="gate-card">
+      <h1>Petit Grande — Guest data report</h1>
+      <p>This page is restricted. Enter the password provided by Bananalabo.</p>
+      <form id="pw-form" autocomplete="off">
+        <label for="pw">Password</label>
+        <input id="pw" type="password" name="password" autocomplete="current-password" required />
+        <button type="submit">Unlock report</button>
+        <div class="err" id="pw-err" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <article id="report">
+    <h1>Petit Grande — Guest data reality check <span class="pill">Beds24 · internal</span></h1>
+    <p class="sub">Source: Beds24 export, Petit Grande Miyabi — 9,176 stays, bookings Feb 2023–Jun 2026.</p>
+
+    <div class="callout">
+      <strong>The core problem: you do not own your guest relationships</strong>
+      Petit Grande runs almost entirely on Booking.com, and the data it returns is mostly anonymous.
+      Of 9,176 stays, 65% have no real guest name and only 1.5% carry a usable email address. Today you
+      cannot directly reach the guests you have already served — which is exactly why a guest CRM with
+      first-party email capture is the highest-leverage project on the table.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="v">9,176</div><div class="l">Total stays (~3.3 yrs)</div></div>
+      <div class="stat"><div class="v d">95.9%</div><div class="l">Booked via OTAs</div></div>
+      <div class="stat"><div class="v d">65%</div><div class="l">Stays are anonymous</div></div>
+      <div class="stat"><div class="v d">1.5%</div><div class="l">Usable email (lines)</div></div>
+    </div>
+
+    <h2>1. Channel dependence</h2>
+    <p style="color: var(--muted); margin: 0 0 14px;">
+      Booking.com alone drives <strong style="color: var(--text);">90.8%</strong> of all booking lines; OTAs combined are
+      <strong style="color: var(--text);">95.9%</strong>. Direct (own site, desk, Google) is <strong style="color: var(--text);">4.1%</strong>.
+    </p>
+    <div class="grid2">
+      <div>
+        <h3 style="margin-top:0">Channel share (100% = all booking lines, n = 9,490)</h3>
+        <div style="display:flex;height:28px;border-radius:6px;overflow:hidden;border:1px solid var(--border);margin:10px 0 8px;">
+          <div style="width:90.78%;background:#f87171" title="Booking.com"></div>
+          <div style="width:4.77%;background:#fbbf24" title="Expedia group"></div>
+          <div style="width:4.13%;background:#4ade80" title="Direct"></div>
+          <div style="width:0.18%;background:#60a5fa" title="Agoda"></div>
+          <div style="width:0.14%;background:#6b7280" title="Other OTA"></div>
+        </div>
+        <table style="font-size:13px;margin-top:0">
+          <tbody>
+            <tr><td style="border-left:4px solid #f87171">Booking.com</td><td class="num">8,615</td><td class="num">90.8%</td></tr>
+            <tr><td style="border-left:4px solid #fbbf24">Expedia group</td><td class="num">453</td><td class="num">4.8%</td></tr>
+            <tr><td style="border-left:4px solid #4ade80">Direct</td><td class="num">392</td><td class="num">4.1%</td></tr>
+            <tr><td style="border-left:4px solid #60a5fa">Agoda</td><td class="num">17</td><td class="num">0.2%</td></tr>
+            <tr><td style="border-left:4px solid #6b7280">Other OTA</td><td class="num">13</td><td class="num">0.1%</td></tr>
+          </tbody>
+        </table>
+        <p class="chart-cap">Stacked bar left-to-right: Booking.com, Expedia, Direct, Agoda, other.</p>
+      </div>
+      <div class="callout warn">
+        <strong>Why this matters to the bottom line</strong>
+        Booking.com commissions typically run ~15%. On near-total OTA dependence, that is a structural margin leak and a single point of failure — a rate or ranking change on one platform moves your whole revenue line.
+      </div>
+    </div>
+
+    <h2>2. Data ownership gap</h2>
+    <p style="color: var(--muted); margin: 0 0 12px;">
+      From stays hosted to guests you can market to, the funnel collapses. This is the gap the CRM and consent form are built to close.
+    </p>
+    <div class="grid2">
+      <table>
+        <thead><tr><th>Stage</th><th class="num">Count</th><th class="num">Share</th></tr></thead>
+        <tbody>
+          <tr><td>Total stays hosted</td><td class="num">9,176</td><td class="num">100%</td></tr>
+          <tr><td>Named (non-anonymous) stays</td><td class="num">3,200</td><td class="num">34.9%</td></tr>
+          <tr><td>Distinct identifiable guests</td><td class="num">2,952</td><td class="num">32.2%</td></tr>
+          <tr><td>Repeat guests (2+ stays)</td><td class="num">224</td><td class="num">7.6% of guests</td></tr>
+          <tr><td>Guests with usable email</td><td class="num">127</td><td class="num">1.4%</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <h3>Email reachability (booking lines, n = 9,490)</h3>
+        <div class="bar-row"><span>Real / usable</span><div class="bar-track"><div class="bar-fill" style="width:1.5%; background:var(--success)"></div></div><span>144 (1.5%)</span></div>
+        <div class="bar-row"><span>Masked OTA</span><div class="bar-track"><div class="bar-fill" style="width:32.8%; background:var(--warning)"></div></div><span>3,113</span></div>
+        <div class="bar-row"><span>Missing</span><div class="bar-track"><div class="bar-fill" style="width:65.7%; background:var(--danger)"></div></div><span>6,233</span></div>
+        <p class="chart-cap">Masked aliases (e.g. @guest.booking.com) cannot be used for marketing after the stay window.</p>
+      </div>
+    </div>
+
+    <h2>3. Who actually stays</h2>
+    <div class="grid2">
+      <div>
+        <h3>Group size per stay (Master Id)</h3>
+        <div class="bar-row"><span>1–3 ppl</span><div class="bar-track"><div class="bar-fill" style="width:64.1%; background:#60a5fa"></div></div><span>64.1%</span></div>
+        <div class="bar-row"><span>4–6 ppl</span><div class="bar-track"><div class="bar-fill" style="width:35%; background:#a78bfa"></div></div><span>35.0%</span></div>
+        <div class="bar-row"><span>7–11 ppl</span><div class="bar-track"><div class="bar-fill" style="width:0.8%; background:var(--muted)"></div></div><span>0.8%</span></div>
+        <div class="bar-row"><span>12–15 ppl</span><div class="bar-track"><div class="bar-fill" style="width:0.1%; background:var(--danger)"></div></div><span>0.1% (8 stays)</span></div>
+        <p class="chart-cap">99% of stays are 1–6 people; ~29% of stays include children.</p>
+      </div>
+      <div class="callout warn">
+        <strong>Reality check: 12–15 person “target” segment</strong>
+        Large 12–15 person groups are only 0.1% of history. The real base is couples and small families of 2–6. Pursuing very large groups is new-market acquisition, not activating the existing base — decide that deliberately.
+      </div>
+    </div>
+
+    <h2>4. Repeat behaviour</h2>
+    <div class="grid2">
+      <div class="stats" style="grid-template-columns: 1fr 1fr; margin: 0;">
+        <div class="stat"><div class="v" style="color:var(--warning)">7.6%</div><div class="l">Identifiable guests who returned</div></div>
+        <div class="stat"><div class="v">0.7%</div><div class="l">Guests with 3+ stays</div></div>
+      </div>
+      <div>
+        <p style="color: var(--muted); margin: 0 0 10px;">
+          Among identifiable guests, only 7.6% booked more than once — largely a follow-up problem (no email, no re-marketing).
+          Industry repeat benchmarks cited internally (45–70% for 2nd/3rd visits) show the size of the upside if owned contact and lifecycle email work.
+        </p>
+        <div class="callout info">
+          <strong>Where the CRM pays for itself</strong>
+          Capture consented emails at check-in, recognise returning guests, and run win-back plus seasonal offers. Repeat guests tend to book direct and sidestep OTA commission.
+        </div>
+      </div>
+    </div>
+
+    <h2>5. Demand patterns</h2>
+    <h3>Stays by check-in month (all years, n = 9,176)</h3>
+    <svg viewBox="0 0 640 200" width="640" height="200" role="img" aria-label="Stays by month line chart">
+      <title>Stays by check-in month</title>
+      <defs>
+        <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- months 711,704,816,851,853,751,766,698,640,784,813,789 max 853 -->
+      <polyline fill="none" stroke="#3b82f6" stroke-width="2"
+        points="20,126.7 70,131.9 120,47.8 170,21.5 220,20.0 270,96.6 320,85.4 370,136.4 420,180.0 470,71.8 520,50.0 570,68.1" />
+      <polygon fill="url(#area)"
+        points="20,126.7 70,131.9 120,47.8 170,21.5 220,20.0 270,96.6 320,85.4 370,136.4 420,180.0 470,71.8 520,50.0 570,68.1 570,180 20,180" />
+      <g fill="#9aa0a6" font-size="11" text-anchor="middle">
+        <text x="20" y="195">Jan</text><text x="70" y="195">Feb</text><text x="120" y="195">Mar</text>
+        <text x="170" y="195">Apr</text><text x="220" y="195">May</text><text x="270" y="195">Jun</text>
+        <text x="320" y="195">Jul</text><text x="370" y="195">Aug</text><text x="420" y="195">Sep</text>
+        <text x="470" y="195">Oct</text><text x="520" y="195">Nov</text><text x="570" y="195">Dec</text>
+      </g>
+      <text x="8" y="14" fill="#9aa0a6" font-size="11">Stays (higher = busier month)</text>
+    </svg>
+    <p class="chart-cap">Year-round demand; soft spring peak (Apr–May) and September dip. Median booking lead time: <strong style="color:var(--text)">71 days</strong> — send seasonal offers ~2–3 months before travel windows.</p>
+
+    <h3>Bookings created by year (bar length vs max year 2024)</h3>
+    <div class="bar-row"><span>2023</span><div class="bar-track"><div class="bar-fill" style="width:87.1%; background:#3b82f6"></div></div><span>2,588</span></div>
+    <div class="bar-row"><span>2024</span><div class="bar-track"><div class="bar-fill" style="width:100%; background:#3b82f6"></div></div><span>2,971</span></div>
+    <div class="bar-row"><span>2025</span><div class="bar-track"><div class="bar-fill" style="width:86.6%; background:#3b82f6"></div></div><span>2,573</span></div>
+    <div class="bar-row"><span>2026 (partial)</span><div class="bar-track"><div class="bar-fill" style="width:35.1%; background:#6b7280"></div></div><span>1,044</span></div>
+    <p class="chart-cap">2026 is partial (through early June); lengths are relative to 2024 (2,971).</p>
+
+    <h2>6. Recommended priorities</h2>
+    <table>
+      <thead><tr><th class="num">#</th><th>Action</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Capture consented email at every check-in</td><td>Fixes the 1.5% reachability gap at the source.</td></tr>
+        <tr><td class="num">2</td><td>Guest CRM + consent form (e.g. ClickUp)</td><td>Turns anonymous OTA stays into owned, mailable records.</td></tr>
+        <tr><td class="num">3</td><td>Win-back + seasonal email flows</td><td>Lifts repeat from 7.6% toward industry benchmarks; repeat books direct.</td></tr>
+        <tr><td class="num">4</td><td>Shift share from OTA to direct</td><td>Recovers ~15% commission and the relationship per point shifted.</td></tr>
+        <tr><td class="num">5</td><td>Decide 12–15 family segment explicitly</td><td>0.1% of history — treat as new acquisition, not base activation.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout neutral">
+      <strong>Data limitations</strong>
+      This export has no price/revenue and no country field — commission in yen and nationality are not measured here. Repeat counts use name-based matching; true repeat may be slightly higher. Next export: include price, country, and language.
+    </div>
+  </article>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "pg_guest_report_unlock_v1";
+      var PASSWORD_SHA256 = "9fd29252f5c1fab639132d74e0605f18b7e1a2ebcc0f1cc1d1856720d1459b05";
+
+      function showReport() {
+        document.getElementById("gate").style.display = "none";
+        document.getElementById("report").classList.add("visible");
+      }
+
+      async function sha256Hex(str) {
+        var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+        var arr = Array.from(new Uint8Array(buf));
+        return arr.map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+      }
+
+      if (sessionStorage.getItem(STORAGE_KEY) === PASSWORD_SHA256) {
+        showReport();
+        return;
+      }
+
+      document.getElementById("pw-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var err = document.getElementById("pw-err");
+        err.textContent = "";
+        var pw = document.getElementById("pw").value;
+        var hex = await sha256Hex(pw);
+        if (hex === PASSWORD_SHA256) {
+          sessionStorage.setItem(STORAGE_KEY, PASSWORD_SHA256);
+          showReport();
+        } else {
+          err.textContent = "Incorrect password.";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
