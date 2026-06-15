@@ -110,6 +110,23 @@
     .bar-track { flex: 1; height: 22px; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
     .bar-fill { height: 100%; border-radius: 3px; }
     .pill { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); color: var(--muted); vertical-align: middle; margin-left: 8px; }
+    .bucket { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; background: var(--surface); }
+    .bucket-head {
+      width: 100%; text-align: left; background: transparent; color: var(--text);
+      padding: 12px 14px; border: none; cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; gap: 12px; font-size: 14px; font-family: inherit;
+    }
+    .bucket-head:hover { background: rgba(255,255,255,0.04); }
+    .bucket-head .chev { color: var(--muted); font-size: 12px; flex-shrink: 0; }
+    .bucket-head .badge { font-size: 12px; color: var(--muted); }
+    .bucket-body { display: none; border-top: 1px solid var(--border); padding: 0 14px 14px; }
+    .bucket.open .bucket-body { display: block; }
+    .namecols { columns: 3; column-gap: 20px; font-size: 13px; list-style: none; padding: 12px 0 0; margin: 0; }
+    .namecols li { break-inside: avoid; padding: 3px 0; border-bottom: 1px solid transparent; }
+    @media (max-width: 720px) { .namecols { columns: 1; } }
+    @media (min-width: 721px) and (max-width: 960px) { .namecols { columns: 2; } }
+    #repeat-loading { margin: 8px 0 0; }
+    #repeat-err { color: var(--danger); font-size: 13px; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -235,6 +252,22 @@
       </div>
     </div>
 
+    <h3>Repeat guests by stay length (nights, excluding 1-night stays)</h3>
+    <p style="color: var(--muted); margin: 0 0 10px; font-size: 14px;">
+      Repeat guest = same normalised name on <strong style="color: var(--text);">2+ stays</strong> (Master Id), excluding anonymous <code style="font-size:12px">BOOKING</code> placeholders.
+      Below, each row is a <strong style="color: var(--text);">stay-length bucket</strong> (nights per stay, <strong style="color: var(--text);">&gt; 1 night only</strong>).
+      The count is how many repeat guests had <em>at least one</em> stay of that length; a guest can appear in multiple buckets.
+      Click a row to expand the full name list.
+    </p>
+    <div class="stats" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 12px;">
+      <div class="stat"><div class="v" id="repeat-total">—</div><div class="l">Repeat guests (2+ stays)</div></div>
+      <div class="stat"><div class="v" id="repeat-multi">—</div><div class="l">With any multi-night stay</div></div>
+      <div class="stat"><div class="v" id="repeat-allmulti">—</div><div class="l">All stays multi-night</div></div>
+    </div>
+    <p class="chart-cap" id="repeat-loading">Loading repeat breakdown…</p>
+    <p class="chart-cap" id="repeat-err" style="display:none;"></p>
+    <div id="repeat-buckets"></div>
+
     <h2>5. Demand patterns</h2>
     <h3>Stays by check-in month (all years, n = 9,176)</h3>
     <svg viewBox="0 0 640 200" width="640" height="200" role="img" aria-label="Stays by month line chart">
@@ -290,9 +323,76 @@
       var STORAGE_KEY = "pg_guest_report_unlock_v1";
       var PASSWORD_SHA256 = "9fd29252f5c1fab639132d74e0605f18b7e1a2ebcc0f1cc1d1856720d1459b05";
 
+      var repeatLoaded = false;
+
       function showReport() {
         document.getElementById("gate").style.display = "none";
         document.getElementById("report").classList.add("visible");
+        loadRepeatBreakdown();
+      }
+
+      function loadRepeatBreakdown() {
+        if (repeatLoaded) return;
+        var url = "./repeat-guests-by-nights.json";
+        fetch(url, { credentials: "same-origin" })
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            repeatLoaded = true;
+            document.getElementById("repeat-loading").style.display = "none";
+            document.getElementById("repeat-total").textContent = String(data.repeatGuestCount);
+            document.getElementById("repeat-multi").textContent = String(data.repeatWithAnyMultiNightStay);
+            document.getElementById("repeat-allmulti").textContent = String(data.repeatWhereAllStaysMultiNight);
+
+            var wrap = document.getElementById("repeat-buckets");
+            wrap.innerHTML = "";
+            (data.buckets || []).forEach(function (b) {
+              var bucket = document.createElement("div");
+              bucket.className = "bucket";
+              var head = document.createElement("button");
+              head.type = "button";
+              head.className = "bucket-head";
+              head.setAttribute("aria-expanded", "false");
+              head.innerHTML =
+                "<span><strong>" + escapeHtml(b.label) + "</strong> <span class=\"badge\">" +
+                b.count + " repeat guest" + (b.count === 1 ? "" : "s") + "</span></span>" +
+                "<span class=\"chev\" aria-hidden=\"true\">Show names</span>";
+              var body = document.createElement("div");
+              body.className = "bucket-body";
+              var ul = document.createElement("ul");
+              ul.className = "namecols";
+              (b.names || []).forEach(function (nm) {
+                var li = document.createElement("li");
+                li.textContent = nm;
+                ul.appendChild(li);
+              });
+              body.appendChild(ul);
+              head.addEventListener("click", function () {
+                var open = bucket.classList.toggle("open");
+                head.setAttribute("aria-expanded", open ? "true" : "false");
+                head.querySelector(".chev").textContent = open ? "Hide names" : "Show names";
+              });
+              bucket.appendChild(head);
+              bucket.appendChild(body);
+              wrap.appendChild(bucket);
+            });
+          })
+          .catch(function (e) {
+            document.getElementById("repeat-loading").textContent = "Could not load repeat breakdown.";
+            var er = document.getElementById("repeat-err");
+            er.style.display = "block";
+            er.textContent = (e && e.message) ? e.message : "Unknown error";
+          });
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;");
       }
 
       async function sha256Hex(str) {

@@ -19,3 +19,13 @@ Access is gated in the browser with a password check (SHA-256 only in the file, 
 ## Updating the report
 
 Regenerate numbers from Beds24 locally, then edit `docs/index.html` or rebuild from your internal process. Never commit raw Beds24 exports to a public repository.
+
+## Repeat guest breakdown (`repeat-guests-by-nights.json`)
+
+The interactive name lists load from [`repeat-guests-by-nights.json`](repeat-guests-by-nights.json). That file contains **guest names (PII)**. If the GitHub repository is **public**, those names are public too (the HTML password gate does not protect JSON). Regenerate after updating the spreadsheet:
+
+```bash
+python3 scripts/build-repeat-guest-json.py
+```
+
+(Run from the project root; requires `beds24-fulldata.xlsx` and `pandas` / `openpyxl`.)

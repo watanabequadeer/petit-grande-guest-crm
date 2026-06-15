@@ -14,6 +14,8 @@ The gate uses a **SHA-256 check in the browser only** — it keeps casual visito
 
 **Do not commit** raw Beds24 exports (`.gitignore` excludes `beds24*.xlsx`). Keep PII local.
 
+The file `docs/repeat-guests-by-nights.json` lists repeat guest **names** for the report UI. On a **public** repo that file is world-readable; the page password does not hide it.
+
 ### First-time publish (already done for this clone)
 
 If you recreate elsewhere:
