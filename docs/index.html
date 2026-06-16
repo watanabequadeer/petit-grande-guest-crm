@@ -270,29 +270,72 @@
     <div id="repeat-buckets"></div>
 
     <h2>5. Demand patterns</h2>
-    <h3>Stays by check-in month (all years, n = 9,176)</h3>
-    <svg viewBox="0 0 640 200" width="640" height="200" role="img" aria-label="Stays by month line chart">
-      <title>Stays by check-in month</title>
+    <h3>Stays by check-in month — total and average (n = 9,176 stays)</h3>
+    <p style="color: var(--muted); margin: 0 0 10px; font-size: 13px;">
+      <strong style="color: var(--text);">Total (blue area):</strong> all check-ins in that calendar month, every year combined (includes partial and future-dated stays in the export).
+      <strong style="color: var(--text);">Average (amber line):</strong> for each month, <code style="font-size:12px">total ÷ N</code> where <strong style="color: var(--text);">N</strong> is the number of calendar years that have <em>at least one</em> check-in in that month (years with zero that month are not counted, so incomplete or missing years do not pull the average down).
+      Right axis scale is for the average only; left axis is for totals.
+    </p>
+    <svg viewBox="0 0 640 220" width="640" height="220" role="img" aria-label="Stays by month: total and average">
+      <title>Check-ins by calendar month — total stays and average per contributing year</title>
+      <text x="8" y="14" fill="#9aa0a6" font-size="11">Left: total stays · Right: avg / year (see note)</text>
+      <g stroke="#2a3140" stroke-width="1">
+        <line x1="20" y1="30" x2="20" y2="180"/><line x1="20" y1="180" x2="570" y2="180"/>
+        <line x1="570" y1="30" x2="570" y2="180"/>
+      </g>
+      <g fill="#9aa0a6" font-size="10" text-anchor="end">
+        <text x="18" y="184">0</text>
+        <text x="18" y="134">300</text>
+        <text x="18" y="84">600</text>
+        <text x="18" y="34">900</text>
+      </g>
+      <g fill="#9aa0a6" font-size="10" text-anchor="start">
+        <text x="575" y="184">0</text>
+        <text x="575" y="134">77</text>
+        <text x="575" y="84">154</text>
+        <text x="575" y="34">230</text>
+      </g>
       <defs>
-        <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="areaTot" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
           <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
         </linearGradient>
       </defs>
-      <!-- months 711,704,816,851,853,751,766,698,640,784,813,789 max 853 -->
-      <polyline fill="none" stroke="#3b82f6" stroke-width="2"
-        points="20,126.7 70,131.9 120,47.8 170,21.5 220,20.0 270,96.6 320,85.4 370,136.4 420,180.0 470,71.8 520,50.0 570,68.1" />
-      <polygon fill="url(#area)"
-        points="20,126.7 70,131.9 120,47.8 170,21.5 220,20.0 270,96.6 320,85.4 370,136.4 420,180.0 470,71.8 520,50.0 570,68.1 570,180 20,180" />
+      <polygon fill="url(#areaTot)"
+        points="20,61.5 70,62.7 120,44.0 170,38.2 220,37.8 270,54.8 320,52.3 370,63.7 420,73.3 470,49.3 520,44.5 570,48.5 570,180 20,180" />
+      <polyline fill="none" stroke="#3b82f6" stroke-width="2.5"
+        points="20,61.5 70,62.7 120,44.0 170,38.2 220,37.8 270,54.8 320,52.3 370,63.7 420,73.3 470,49.3 520,44.5 570,48.5" />
+      <polyline fill="none" stroke="#fbbf24" stroke-width="2"
+        points="20,102.7 70,65.2 120,73.6 170,41.2 220,41.0 270,57.5 320,55.1 370,66.2 420,75.7 470,52.2 520,47.5 570,51.4" />
       <g fill="#9aa0a6" font-size="11" text-anchor="middle">
-        <text x="20" y="195">Jan</text><text x="70" y="195">Feb</text><text x="120" y="195">Mar</text>
-        <text x="170" y="195">Apr</text><text x="220" y="195">May</text><text x="270" y="195">Jun</text>
-        <text x="320" y="195">Jul</text><text x="370" y="195">Aug</text><text x="420" y="195">Sep</text>
-        <text x="470" y="195">Oct</text><text x="520" y="195">Nov</text><text x="570" y="195">Dec</text>
+        <text x="20" y="198">Jan</text><text x="70" y="198">Feb</text><text x="120" y="198">Mar</text>
+        <text x="170" y="198">Apr</text><text x="220" y="198">May</text><text x="270" y="198">Jun</text>
+        <text x="320" y="198">Jul</text><text x="370" y="198">Aug</text><text x="420" y="198">Sep</text>
+        <text x="470" y="198">Oct</text><text x="520" y="198">Nov</text><text x="570" y="198">Dec</text>
       </g>
-      <text x="8" y="14" fill="#9aa0a6" font-size="11">Stays (higher = busier month)</text>
+      <g font-size="11">
+        <text x="400" y="28" fill="#3b82f6">Total stays (left axis, max 900)</text>
+        <text x="400" y="44" fill="#fbbf24">Avg / contributing year (right axis, max 230)</text>
+      </g>
     </svg>
-    <p class="chart-cap">Year-round demand; soft spring peak (Apr–May) and September dip. Median booking lead time: <strong style="color:var(--text)">71 days</strong> — send seasonal offers ~2–3 months before travel windows.</p>
+    <table style="font-size:12px; margin-top:10px;">
+      <thead><tr><th>Month</th><th class="num">Total stays</th><th class="num">Avg / yr</th><th class="num">Years (N)</th></tr></thead>
+      <tbody>
+        <tr><td>Jan</td><td class="num">711</td><td class="num">118.5</td><td class="num">6</td></tr>
+        <tr><td>Feb</td><td class="num">704</td><td class="num">176.0</td><td class="num">4</td></tr>
+        <tr><td>Mar</td><td class="num">816</td><td class="num">163.2</td><td class="num">5</td></tr>
+        <tr><td>Apr</td><td class="num">851</td><td class="num">212.8</td><td class="num">4</td></tr>
+        <tr><td>May</td><td class="num">853</td><td class="num">213.2</td><td class="num">4</td></tr>
+        <tr><td>Jun</td><td class="num">751</td><td class="num">187.8</td><td class="num">4</td></tr>
+        <tr><td>Jul</td><td class="num">766</td><td class="num">191.5</td><td class="num">4</td></tr>
+        <tr><td>Aug</td><td class="num">698</td><td class="num">174.5</td><td class="num">4</td></tr>
+        <tr><td>Sep</td><td class="num">640</td><td class="num">160.0</td><td class="num">4</td></tr>
+        <tr><td>Oct</td><td class="num">784</td><td class="num">196.0</td><td class="num">4</td></tr>
+        <tr><td>Nov</td><td class="num">813</td><td class="num">203.2</td><td class="num">4</td></tr>
+        <tr><td>Dec</td><td class="num">789</td><td class="num">197.2</td><td class="num">4</td></tr>
+      </tbody>
+    </table>
+    <p class="chart-cap">Year-round demand; soft spring peak (Apr–May) and September dip on totals. Median booking lead time: <strong style="color:var(--text)">71 days</strong> — send seasonal offers ~2–3 months before travel windows.</p>
 
     <h3>Bookings created per month by year (one row per stay, by booking date)</h3>
     <p style="color: var(--muted); margin: 0 0 8px; font-size: 13px;">
